@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+body{
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    -webkit-font-smoothing: antialiased;
+}
+.button{
+    @apply border-none bg-[#4F54A7] p-[8px_16px] rounded-lg text-white font-bold cursor-pointer transition-all hover:bg-[#293684]
+}
+.button-secondary{
+    @apply border-none bg-[#ffffffcc] p-[8px_16px] rounded-lg font-bold text-[#4F54A7] cursor-pointer transition-all hover:text-[#293684] hover:bg-white
+}
