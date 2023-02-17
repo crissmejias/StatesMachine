@@ -1,4 +1,30 @@
 import { assign, createMachine } from "xstate";
+import { fetchCountries } from "../Utils/fetchCountries";
+const fillCountries = {
+  initial: "loading",
+  states: {
+    loading: {
+      invoke:{
+        id: 'getCountries',
+        src: () => fetchCountries,
+        onDone:{
+          target: 'success',
+          actions: assign({countries: (context,event) => event.data })
+        },
+        onError:{
+          target: 'failure',
+          actions: assign({error: 'falló el request'})
+        } 
+      }
+    },
+    success: {},
+    failure: {
+      on: {
+        RETRY: { target: "loading" },
+      },
+    },
+  },
+};
 
 const bookingMachine = createMachine({
   id: "bookingMachine",
@@ -6,6 +32,8 @@ const bookingMachine = createMachine({
   context:{
     passengers: [],
     selectedCountry: '',
+    countries: [],
+    error: '',
   },
   states: {
     inicio: {
@@ -31,8 +59,9 @@ const bookingMachine = createMachine({
             selectedCountry: (context, event)=>{ return ''},
             passengers: (context, event)=>{return []}
           })
-      }
       },
+    },
+    ...fillCountries
     },
     passengers: {
       on: {
@@ -40,8 +69,8 @@ const bookingMachine = createMachine({
         Cancel:{
           target: "inicio",
           actions: assign({
-            selectedCountry: (context, event)=>{ return ''},
-            passengers: (context, event)=>{return []}
+            selectedCountry:'',
+            passengers: []
           })
       },
         Add: {
@@ -53,6 +82,15 @@ const bookingMachine = createMachine({
       },
     },
     tickets: {
+      after:{
+        5000:{
+          target: 'inicio',
+          actions: assign({
+            selectedCountry:'',
+            passengers: []
+          })
+        }
+      },
       on: {
         Done: "inicio",
       },
