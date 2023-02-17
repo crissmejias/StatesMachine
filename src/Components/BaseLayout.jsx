@@ -5,6 +5,7 @@ import { useMachine } from "@xstate/react";
 
 const BaseLayout = () => {
   const [state, send] = useMachine(bookingMachine);
+  console.log(state.value, state.context)
   return (
   <div className={`bg-travel w-full h-screen bg-center bg-cover flex justify-center items-center flex-col p-[50px]`}>
     <Nav state={state} send={send}/>

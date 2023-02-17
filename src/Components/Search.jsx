@@ -3,7 +3,7 @@ import { useState } from "react"
 const Search = ({state, send}) => {
   const [flight, setFlight] = useState('');
   const handleClick = () => {
-    send('Continue')
+    send('Continue', {selectedCountry: flight})
   }
   const handleChange = (e) => {
     setFlight(e.target.value)
